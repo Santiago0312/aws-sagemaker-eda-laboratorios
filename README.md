@@ -139,3 +139,7 @@ El laboratorio mostró que un análisis útil comienza antes de entrenar un mode
 También fue importante distinguir entre categorías ordinales y nominales. Convertir texto a números sin analizar su significado puede introducir relaciones falsas; por eso se usó una asignación ordenada cuando existe jerarquía y variables indicadoras cuando las categorías solo representan nombres diferentes. SageMaker facilitó la ejecución reproducible, mientras que Git permitió conservar evidencia y recuperar el trabajo de instancias temporales.
 
 Como mejora futura, se podría comparar el desempeño de varios modelos con y sin los valores extremos, aplicar particiones estratificadas por el desbalance de la clase y construir una canalización que automatice la validación y la codificación para evitar diferencias entre entrenamiento e inferencia.
+
+## Uso ético de la inteligencia artificial
+
+Durante el desarrollo se utilizó inteligencia artificial como apoyo para organizar la entrega, mejorar la redacción y revisar la claridad de las explicaciones. Los procedimientos, resultados y evidencias fueron verificados en el entorno del laboratorio. El estudiante conserva la responsabilidad sobre el contenido presentado, su comprensión y su uso académico.
