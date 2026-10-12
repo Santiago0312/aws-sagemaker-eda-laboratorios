@@ -1,145 +1,71 @@
-# Laboratorios de EDA y preprocesamiento en Amazon SageMaker
+# Entrenamiento y despliegue en Amazon SageMaker
 
-**Estudiante:** Santiago Perez Garzon  
-**Curso:** Machine Learning Foundations  
-**Entorno:** AWS Academy, Amazon SageMaker AI y JupyterLab  
-**Región:** `us-east-1`
+**Estudiante:** Santiago Perez Garzon · **Curso:** AWS Academy Machine Learning Foundations  
+**Laboratorios:** 3.4 y 3.5 · **Región:** `us-east-1`
 
-## Objetivo
+**Repositorio:** https://github.com/Santiago0312/aws-sagemaker-eda-laboratorios  
+**Rama:** `actividad-entrenamiento-despliegue`
 
-Desarrollar un flujo reproducible de análisis exploratorio de datos y preprocesamiento básico: cargar datos reales, revisar su estructura y calidad, generar visualizaciones, estudiar correlaciones y convertir variables categóricas a representaciones numéricas aptas para aprendizaje automático.
+Esta rama se eligió porque el enunciado recibido no indica un nombre específico. Si el docente exige otro, debe ajustarse antes de entregar. La actividad anterior está en [README_EDA.md](README_EDA.md).
 
-## Evidencia de acceso y configuración
+## Pasos y propósito
 
-El laboratorio se inició desde AWS Academy con las credenciales institucionales. La instancia principal del laboratorio 3.1 se configuró como `MyNotebook`, tipo `ml.m5.xlarge`, plataforma Amazon Linux 2023, volumen de 5 GB, rol de ejecución suministrado por el laboratorio y ciclo de vida `ml-pipeline`. Antes de abrir JupyterLab se verificó el estado `InService`.
+1. **Acceso.** Ingresé a cada laboratorio desde AWS Academy, comprobé `MyNotebook` en estado `InService` y abrí JupyterLab. Utilicé el rol y el bucket suministrados por cada sesión.
+2. **Preparación.** Descargué Vertebral Column de UCI mediante HTTPS y cargué `column_2C_weka.arff`: 310 registros, seis variables numéricas y una etiqueta. Codifiqué `Abnormal=1`, `Normal=0` y coloqué la etiqueta primero para cumplir el formato de XGBoost.
+3. **División y S3.** Separé 248 filas de entrenamiento, 31 de validación y 31 de prueba. La estratificación conserva la proporción de clases y la semilla 42 permite repetir la división. Subí los CSV sin encabezado ni índice a prefijos separados. Reservé prueba para evaluar generalización.
+4. **Entrenamiento 3.4.** Usé XGBoost `1.0-1`, 42 rondas, `binary:logistic` y AUC. El objetivo produce una puntuación para la clase positiva; AUC evalúa la separación entre clases. SageMaker guarda el artefacto en S3. Adapté `ModelTrainer.train` a `Estimator.fit` porque la instancia trae SDK 2, conservando la configuración oficial. El resultado real se registra en `resultados/resultado_lab34.json`.
+5. **Despliegue 3.5.** Ejecuté el entrenamiento de preparación incluido en su notebook independiente y desplegué una instancia `ml.m4.xlarge` con `CSVSerializer`. Confirmé el endpoint `InService` y envié la entrada del profesor.
+6. **Lotes, evaluación y limpieza.** Envié las 31 filas de prueba sin etiqueta a Batch Transform, con `MultiRecord` y separación por líneas. El trabajo terminó `Completed`. Comparé las probabilidades con las etiquetas y calculé las métricas. Después de guardar evidencias, eliminé el endpoint y su configuración; el waiter de AWS confirmó la eliminación en `resultados/limpieza_lab35.json`.
 
-![Acceso al laboratorio](evidencias/01_acceso_inicio_laboratorio.png)
+## Entrada solicitada y lectura del resultado
 
-![Configuración de la instancia](evidencias/02_configuracion_instancia.png)
-
-![Instancia en servicio](evidencias/03_instancia_en_servicio.png)
-
-## Laboratorio 3.1: creación e importación de datos
-
-### Tarea 1: instancia de SageMaker
-
-Se creó y verificó la instancia administrada para disponer de un kernel, almacenamiento temporal y los notebooks proporcionados por AWS Academy. La descripción técnica quedó en [`docs/3_1_tarea_1.md`](docs/3_1_tarea_1.md).
-
-### Tarea 2: guía de Python y JupyterLab
-
-Se trabajó la guía `PythonCheatSheet`, combinando Markdown, código, tipos de datos, control de flujo y operaciones tabulares. El nombre completo se agregó al inicio y la ejecución se realizó con un kernel de Python compatible.
-
-![Nombre al inicio del notebook](evidencias/05_tarea2_nombre_jupyter.png)
-
-![Resultados de la guía de Python](evidencias/06_tarea2_resultados_python.png)
-
-Notebook: [`notebooks/3_1_tarea_2_python.ipynb`](notebooks/3_1_tarea_2_python.ipynb)
-
-### Tarea 3: inspección del ejemplo MNIST
-
-Se abrió `linear_learner_mnist.ipynb` y se identificó el flujo de preparación, carga a S3, entrenamiento con Linear Learner, despliegue y evaluación. De acuerdo con la guía, el ejemplo se inspeccionó sin ejecutarlo porque depende de recursos externos de S3.
-
-![Inspección del ejemplo MNIST](evidencias/07_tarea3_inspeccion_mnist.png)
-
-Notebook: [`notebooks/3_1_tarea_3_ejemplo_mnist.ipynb`](notebooks/3_1_tarea_3_ejemplo_mnist.ipynb)
-
-### Tarea 4: importar Vertebral Column
-
-Se descargó el archivo ZIP del repositorio UCI mediante HTTPS, se inspeccionaron las versiones DAT y ARFF y se cargó `column_2C_weka.arff` con SciPy y pandas. La validación confirmó:
-
-- 310 observaciones y 7 columnas.
-- Seis variables numéricas y una etiqueta de clase.
-- Cero valores faltantes.
-- 210 registros `Abnormal` y 100 registros `Normal`.
-
-Notebook: [`notebooks/3_1_tarea_4_importacion.ipynb`](notebooks/3_1_tarea_4_importacion.ipynb)
-
-### Tarea 5: conservación
-
-Los notebooks se guardaron con sus salidas y se versionaron antes de abandonar el entorno temporal. La explicación está en [`docs/3_1_tarea_5.md`](docs/3_1_tarea_5.md).
-
-## Laboratorio 3.2: exploración de datos
-
-### Tarea 1: acceso al entorno
-
-Se inició el entorno independiente del laboratorio, se comprobó `MyNotebook` en estado `InService` y se abrió JupyterLab. Esto quedó documentado en [`docs/3_2_tarea_1.md`](docs/3_2_tarea_1.md).
-
-### Tarea 2: EDA del conjunto Vertebral Column
-
-El notebook oficial se ejecutó completo: **52 celdas y cero errores**. Se revisaron dimensiones, tipos, estadísticas descriptivas, distribución de la clase, valores atípicos, histogramas, diagramas de caja, dispersión y matriz de correlación.
-
-Los hallazgos principales fueron:
-
-- El conjunto conserva 310 filas y 7 columnas.
-- La clase está desbalanceada aproximadamente 2:1: 210 casos anormales y 100 normales.
-- `degree_spondylolisthesis` presenta valores extremos y la relación lineal positiva más alta con la clase, aproximadamente `0.44`.
-- `pelvic_incidence` tiene correlación positiva aproximada de `0.35` con la clase.
-- `pelvic_radius` tiene una relación negativa aproximada de `-0.31` con la clase.
-- Las correlaciones orientan el análisis, pero no prueban causalidad ni sustituyen la validación de un modelo.
-
-![Notebook 3.2 con nombre y resultados](evidencias/08_lab32_nombre_y_resultados.png)
-
-![Mapa de calor de correlaciones](evidencias/09_lab32_heatmap_correlacion.png)
-
-Notebook: [`notebooks/3_2_exploracion_datos.ipynb`](notebooks/3_2_exploracion_datos.ipynb)
-
-## Laboratorio 3.3: codificación de datos categóricos
-
-### Tarea 1: acceso al entorno
-
-Se inició una nueva instancia temporal, se verificó su estado y se preparó JupyterLab para trabajar con el conjunto Automobile. La explicación está en [`docs/3_3_tarea_1.md`](docs/3_3_tarea_1.md).
-
-### Tarea 2: variables ordinales y nominales
-
-El notebook oficial se ejecutó completo: **53 celdas y cero errores**. El conjunto Automobile contiene 205 filas y 25 atributos antes de seleccionar las variables de trabajo. Se aplicaron dos estrategias:
-
-- **Codificación ordinal:** `num-of-doors` y `num-of-cylinders` se transformaron a valores numéricos respetando su orden natural.
-- **Codificación nominal:** `drive-wheels` y `aspiration` se transformaron en columnas indicadoras. Así se evita imponer una jerarquía inexistente entre categorías como `4wd`, `fwd` y `rwd`.
-
-El resultado final conserva las categorías originales para comparación e incorpora columnas como `doors`, `cylinders`, `drive-wheels_4wd`, `drive-wheels_fwd`, `drive-wheels_rwd` y `aspiration_turbo`.
-
-![Notebook 3.3 con nombre y datos](evidencias/10_lab33_nombre_y_datos.png)
-
-![Resultado final de la codificación](evidencias/11_lab33_codificacion_final.png)
-
-Notebook: [`notebooks/3_3_codificacion_categorica.ipynb`](notebooks/3_3_codificacion_categorica.ipynb)
-
-## Gestión del repositorio
-
-El historial separa las tareas para que cada cambio pueda revisarse y recuperarse de forma independiente. Los commits de los laboratorios 3.2 y 3.3 se generaron dentro de sus respectivas instancias de SageMaker y se conservaron mediante bundles de Git.
-
-![Repositorio creado](evidencias/04_repositorio_creado.png)
-
-## Estructura
-
-```text
-.
-├── README.md
-├── docs/
-│   ├── 3_1_tarea_1.md
-│   ├── 3_1_tarea_5.md
-│   ├── 3_2_tarea_1.md
-│   ├── 3_2_tarea_2.md
-│   ├── 3_3_tarea_1.md
-│   └── 3_3_tarea_2.md
-├── notebooks/
-│   ├── 3_1_tarea_2_python.ipynb
-│   ├── 3_1_tarea_3_ejemplo_mnist.ipynb
-│   ├── 3_1_tarea_4_importacion.ipynb
-│   ├── 3_2_exploracion_datos.ipynb
-│   └── 3_3_codificacion_categorica.ipynb
-└── evidencias/
-    └── capturas del acceso, configuración, ejecución y resultados
+```python
+entrada = "63.0,12.5,45.0,50.5,125.0,3.0"
+respuesta = xgb_predictor.predict([float(v) for v in entrada.split(",")])
 ```
 
-## Reflexión final
+Orden: `pelvic_incidence`, `pelvic_tilt`, `lumbar_lordosis_angle`, `sacral_slope`, `pelvic_radius`, `degree_spondylolisthesis`.
 
-El laboratorio mostró que un análisis útil comienza antes de entrenar un modelo. Primero es necesario verificar de dónde provienen los datos, su forma, sus tipos y la presencia de valores faltantes. Las estadísticas y visualizaciones ayudaron a detectar desbalance, valores extremos y relaciones que no son evidentes al observar una tabla.
+**Respuesta real: `0.01694011501967907`.** Corresponde aproximadamente al 1,69 % para `Abnormal=1`. La clasificación es **Normal (0)** con umbrales 0,5 y 0,65. Es una estimación del modelo sobre este conjunto; no representa certeza clínica.
 
-También fue importante distinguir entre categorías ordinales y nominales. Convertir texto a números sin analizar su significado puede introducir relaciones falsas; por eso se usó una asignación ordenada cuando existe jerarquía y variables indicadoras cuando las categorías solo representan nombres diferentes. SageMaker facilitó la ejecución reproducible, mientras que Git permitió conservar evidencia y recuperar el trabajo de instancias temporales.
+![Entrada y respuesta real](evidencias/actividad_entrenamiento_despliegue/05_lab35_validacion_entrada.jpg)
 
-Como mejora futura, se podría comparar el desempeño de varios modelos con y sin los valores extremos, aplicar particiones estratificadas por el desbalance de la clase y construir una canalización que automatice la validación y la codificación para evitar diferencias entre entrenamiento e inferencia.
+## Métricas sobre prueba
 
-## Uso ético de la inteligencia artificial
+Se evaluaron 31 casos: 10 normales y 21 anormales. La clase positiva es Abnormal. El umbral 0,65 reproduce la guía y 0,5 permite comparar.
 
-Durante el desarrollo se utilizó inteligencia artificial como apoyo para organizar la entrega, mejorar la redacción y revisar la claridad de las explicaciones. Los procedimientos, resultados y evidencias fueron verificados en el entorno del laboratorio. El estudiante conserva la responsabilidad sobre el contenido presentado, su comprensión y su uso académico.
+| Métrica | Umbral 0,5 | Umbral 0,65 |
+|---|---:|---:|
+| Exactitud | 83,87 % | 80,65 % |
+| Precisión | 86,36 % | 85,71 % |
+| Recall | 90,48 % | 85,71 % |
+| F1 | 88,37 % | 85,71 % |
+| ROC AUC | 0,8905 | 0,8905 |
+| Verdaderos negativos | 7 | 7 |
+| Falsos positivos | 3 | 3 |
+| Falsos negativos | 2 | 3 |
+| Verdaderos positivos | 19 | 18 |
+
+Exactitud mide aciertos totales; precisión, cuántas predicciones positivas fueron correctas; recall, cuántos positivos se detectaron; F1 combina precisión y recall. AUC usa las probabilidades y no depende del umbral. El entrenamiento de 3.5 obtuvo AUC 1,0000 en entrenamiento y 0,9667 en validación. Los valores completos están en [resultado_lab35.json](resultados/resultado_lab35.json).
+
+## Reflexión
+
+El modelo supera la referencia de predecir siempre Abnormal, que acertaría 21/31 casos (67,74 %). Con umbral 0,5 quedan tres falsos positivos y dos falsos negativos. Subir a 0,65 añade un falso negativo sin reducir los falsos positivos en esta muestra. El umbral debe elegirse considerando el costo de ambos errores y validarse en más datos.
+
+La diferencia entre AUC de entrenamiento, validación y prueba sugiere estudiar sobreajuste. Solo 31 casos de prueba limitan la estabilidad de la estimación. Propongo validación cruzada estratificada, ajuste de profundidad y regularización, comparación con modelos sencillos y evaluación en datos representativos del uso real. En la nube también se deben controlar costos, mantener el orden de variables y monitorear cambios en los datos.
+
+## Evidencias y repositorio
+
+- [Notebook 3.4 ejecutado](notebooks/3_4_entrenamiento_santiago.ipynb).
+- [Notebook 3.5: 39 celdas y cero errores](notebooks/3_5_despliegue_santiago.ipynb).
+- [Entrenamiento 3.5 Completed](evidencias/actividad_entrenamiento_despliegue/04_lab35_entrenamiento_completed.jpg).
+- [Endpoint InService](evidencias/actividad_entrenamiento_despliegue/06_lab35_endpoint_inservice.jpg).
+- [Batch Transform Completed](evidencias/actividad_entrenamiento_despliegue/07_lab35_batch_completed.jpg).
+- [Métricas reales de prueba](evidencias/actividad_entrenamiento_despliegue/08_lab35_metricas_prueba.jpg).
+- [Instancia activa 3.4](evidencias/actividad_entrenamiento_despliegue/09_lab34_instancia_actual.jpg).
+
+Los commits se hicieron en las terminales de los workspaces de SageMaker. Los bundles descargados conservan ese historial para publicar la rama desde el equipo local. Los nombres de los trabajos relacionan las capturas con los resultados.
+
+## Uso ético de IA
+
+Se utilizó IA para revisar compatibilidad del código, organizar evidencias y redactar explicaciones. Las probabilidades, métricas y capturas proceden de ejecuciones reales de AWS. El estudiante conserva la responsabilidad de revisar, comprender y sustentar la entrega.

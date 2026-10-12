@@ -1,0 +1,35 @@
+{
+  "TrainingJobName": "sagemaker-xgboost-2026-10-12-09-19-44-233",
+  "TrainingJobStatus": "Completed",
+  "FinalMetricDataList": [
+    {
+      "MetricName": "validation:auc",
+      "Value": 0.9666699767112732,
+      "Timestamp": "2026-10-12 09:21:39+00:00"
+    },
+    {
+      "MetricName": "train:auc",
+      "Value": 1.0,
+      "Timestamp": "2026-10-12 09:21:39+00:00"
+    }
+  ],
+  "HyperParameters": {
+    "eval_metric": "auc",
+    "num_round": "42",
+    "objective": "binary:logistic"
+  },
+  "ResourceConfig": {
+    "InstanceType": "ml.m5.4xlarge",
+    "InstanceCount": 1,
+    "VolumeSizeInGB": 30
+  },
+  "ModelArtifacts": {
+    "S3ModelArtifacts": "s3://c221302a5580007l17556420t1w141374916042-labbucket-fxbih8rkkfof/lab3/output/sagemaker-xgboost-2026-10-12-09-19-44-233/output/model.tar.gz"
+  },
+  "filas": {
+    "train": 248,
+    "validate": 31,
+    "test": 31
+  },
+  "compatibilidad": "SDK 2 instalado en la instancia; Estimator.fit equivale al flujo ModelTrainer.train de SDK 3"
+}
