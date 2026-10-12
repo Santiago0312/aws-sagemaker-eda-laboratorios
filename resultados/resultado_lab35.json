@@ -1,0 +1,77 @@
+{
+  "validacion_entrada": {
+    "entrada": "63.0,12.5,45.0,50.5,125.0,3.0",
+    "probabilidad_abnormal": 0.01694011501967907,
+    "clase_umbral_05": "Normal",
+    "clase_umbral_065": "Normal",
+    "endpoint": "sagemaker-xgboost-2026-10-12-08-59-32-092",
+    "estado_endpoint": "InService"
+  },
+  "metricas_prueba": {
+    "0.5": {
+      "accuracy": 0.8387096774193549,
+      "precision": 0.8636363636363636,
+      "recall": 0.9047619047619048,
+      "f1": 0.8837209302325582,
+      "roc_auc": 0.8904761904761904,
+      "matriz_confusion": [
+        [
+          7,
+          3
+        ],
+        [
+          2,
+          19
+        ]
+      ]
+    },
+    "0.65": {
+      "accuracy": 0.8064516129032258,
+      "precision": 0.8571428571428571,
+      "recall": 0.8571428571428571,
+      "f1": 0.8571428571428571,
+      "roc_auc": 0.8904761904761904,
+      "matriz_confusion": [
+        [
+          7,
+          3
+        ],
+        [
+          3,
+          18
+        ]
+      ]
+    }
+  },
+  "filas": {
+    "train": 248,
+    "validate": 31,
+    "test": 31
+  },
+  "entrenamiento": {
+    "nombre": "sagemaker-xgboost-2026-10-12-08-54-39-662",
+    "estado": "Completed",
+    "metricas": [
+      {
+        "MetricName": "validation:auc",
+        "Value": 0.9666699767112732,
+        "Timestamp": "2026-10-12 08:59:05+00:00"
+      },
+      {
+        "MetricName": "train:auc",
+        "Value": 1.0,
+        "Timestamp": "2026-10-12 08:59:05+00:00"
+      }
+    ],
+    "hiperparametros": {
+      "eval_metric": "auc",
+      "num_round": "42",
+      "objective": "binary:logistic"
+    },
+    "instancia": "ml.m4.xlarge"
+  },
+  "transformacion": {
+    "nombre": "sagemaker-xgboost-2026-10-12-09-03-04-730",
+    "estado": "Completed"
+  }
+}
