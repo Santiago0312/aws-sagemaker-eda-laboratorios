@@ -17,6 +17,12 @@ Esta rama se eligió porque el enunciado recibido no indica un nombre específic
 5. **Despliegue 3.5.** Ejecuté el entrenamiento de preparación incluido en su notebook independiente y desplegué una instancia `ml.m4.xlarge` con `CSVSerializer`. Confirmé el endpoint `InService` y envié la entrada del profesor.
 6. **Lotes, evaluación y limpieza.** Envié las 31 filas de prueba sin etiqueta a Batch Transform, con `MultiRecord` y separación por líneas. El trabajo terminó `Completed`. Comparé las probabilidades con las etiquetas y calculé las métricas. Después de guardar evidencias, eliminé el endpoint y su configuración; el waiter de AWS confirmó la eliminación en `resultados/limpieza_lab35.json`.
 
+## Resultado del laboratorio 3.4
+
+Se ejecutaron **52 celdas, 20 de código, sin errores**. Trabajo: sagemaker-xgboost-2026-10-12-09-19-44-233. Estado: **Completed**. Instancia: ml.m5.4xlarge. AUC de entrenamiento: 1,0000; AUC de validación: 0,9667.
+
+[Entrenamiento Completed](evidencias/actividad_entrenamiento_despliegue/10_lab34_entrenamiento_completed.jpg) · [Resultados en el workspace](evidencias/actividad_entrenamiento_despliegue/11_lab34_resultados_workspace.jpg) · [Registro completo](resultados/resultado_lab34.json).
+
 ## Entrada solicitada y lectura del resultado
 
 ```python
