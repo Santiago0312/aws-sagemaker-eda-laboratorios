@@ -1,0 +1,29 @@
+{
+  "TrainingJobName": "sagemaker-xgboost-2026-10-12-08-54-39-662",
+  "TrainingJobStatus": "Completed",
+  "FinalMetricDataList": [
+    {
+      "MetricName": "validation:auc",
+      "Value": 0.9666699767112732,
+      "Timestamp": "2026-10-12 08:59:05+00:00"
+    },
+    {
+      "MetricName": "train:auc",
+      "Value": 1.0,
+      "Timestamp": "2026-10-12 08:59:05+00:00"
+    }
+  ],
+  "HyperParameters": {
+    "eval_metric": "auc",
+    "num_round": "42",
+    "objective": "binary:logistic"
+  },
+  "ResourceConfig": {
+    "InstanceType": "ml.m4.xlarge",
+    "InstanceCount": 1,
+    "VolumeSizeInGB": 30
+  },
+  "ModelArtifacts": {
+    "S3ModelArtifacts": "s3://c221302a5580009l17566724t1w677564161657-labbucket-ti3uh1yeqsky/lab3/output/sagemaker-xgboost-2026-10-12-08-54-39-662/output/model.tar.gz"
+  }
+}

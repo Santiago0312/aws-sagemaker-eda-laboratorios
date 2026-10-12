@@ -1,0 +1,8 @@
+{
+  "entrada": "63.0,12.5,45.0,50.5,125.0,3.0",
+  "probabilidad_abnormal": 0.01694011501967907,
+  "clase_umbral_05": "Normal",
+  "clase_umbral_065": "Normal",
+  "endpoint": "sagemaker-xgboost-2026-10-12-08-59-32-092",
+  "estado_endpoint": "InService"
+}
