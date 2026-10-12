@@ -70,6 +70,8 @@ La diferencia entre AUC de entrenamiento, validación y prueba sugiere estudiar 
 - [Métricas reales de prueba](evidencias/actividad_entrenamiento_despliegue/08_lab35_metricas_prueba.jpg).
 - [Instancia activa 3.4](evidencias/actividad_entrenamiento_despliegue/09_lab34_instancia_actual.jpg).
 
+[Rama y commits en el workspace](evidencias/actividad_entrenamiento_despliegue/12_commits_workspace.jpg).
+
 Los commits se hicieron en las terminales de los workspaces de SageMaker. Los bundles descargados conservan ese historial para publicar la rama desde el equipo local. Los nombres de los trabajos relacionan las capturas con los resultados.
 
 ## Uso ético de IA
